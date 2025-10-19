@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 52773977764893872}
   - component: {fileID: 2837139048766595194}
   - component: {fileID: 2268348016659319542}
+  - component: {fileID: 3984234224740843010}
   m_Layer: 0
   m_Name: PirateCoin
   m_TagString: Coin
@@ -112,3 +113,18 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: -127844609115117539, guid: 5d0dbe9cd045eb6458b6aa0a6ffc0235, type: 3}
+--- !u!114 &3984234224740843010
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4350326189977551279}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75932ebe86377c64e8e457dd6874f7d9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CoinsMovement
+  rotationSpeed: 100
+  bobAmplitude: 0.125
+  bobFrequency: 2
