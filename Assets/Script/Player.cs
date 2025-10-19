@@ -42,6 +42,11 @@ public class Player : MonoBehaviour
     private bool onGround = true; 
     private bool isAlive = false;
 
+    [SerializeField]
+    private AudioSource _backgroundMusic;
+    [SerializeField]
+    private AudioSource _gameOverSound;
+
     void Start()
     {
         if (_rb == null)
@@ -184,13 +189,17 @@ public class Player : MonoBehaviour
     {
         isAlive = false;
         _gameOver.enabled = true;
-        Debug.Log("I'm Dead My nigga!");
+        Debug.Log("I'm Dead!!");
         _rb.linearVelocity = new Vector3(0,0,0);
 
         //for die animation and setting to ground
         _animator.SetBool("isDead",true);
         _boxCollider.size = new Vector3(_originalSize.x, _originalSize.y * .3f, _originalSize.z);
-      
+
+        _backgroundMusic.Stop();
+        _gameOverSound.Play();
+
+
     }
     
   

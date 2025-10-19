@@ -19,6 +19,9 @@ public class CoinCollector : MonoBehaviour
     [SerializeField]
     private float _maxSpeed = 5f;
 
+    [SerializeField]
+    private AudioSource _coinSound;
+
     private void Start()
     {
         _highest = PlayerPrefs.GetInt("HighScore",0);  //loads saved highscore
@@ -32,9 +35,11 @@ public class CoinCollector : MonoBehaviour
         if (coinColl.gameObject.CompareTag("Coin"))
         {
             _coins ++;
-            Debug.Log("coin");
             Destroy(coinColl.gameObject);
             ShowCoins();
+            _coinSound.Play();
+
+
             if (_speedPerCoin < _maxSpeed) //need to fix this!! player.currentspeed
             {
                 _player.IncreaseSpeed(_speedPerCoin);

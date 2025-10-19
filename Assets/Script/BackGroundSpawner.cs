@@ -24,12 +24,12 @@ public class BackGroundSpawner : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (_player.position.z > spawnZ - 40)
+        if (_player.position.z > spawnZ - 80)
         {
             SpawnPlatform();
-            spawnZ += 85;
+            spawnZ += 87;
         }
-        if (_spawnnedBackground.Count > 0 && _player.position.z > _spawnnedBackground[0].transform.position.z + 85)
+        if (_spawnnedBackground.Count > 0 && _player.position.z > _spawnnedBackground[0].transform.position.z + 90)
         {
             DestroyTrack();
         }
@@ -67,7 +67,7 @@ public class BackGroundSpawner : MonoBehaviour
         }
         _spawnnedBackground.Clear();
         _backgroundOnScreen = 1;
-        spawnZ = 85;
+        spawnZ = 87;
         SpawnInitial();
 
     }
