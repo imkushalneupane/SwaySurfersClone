@@ -1,3 +1,4 @@
+using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -46,6 +47,9 @@ public class Player : MonoBehaviour
     private AudioSource _backgroundMusic;
     [SerializeField]
     private AudioSource _gameOverSound;
+
+    [SerializeField]
+    Transform _parentPlayer;
 
     void Start()
     {
@@ -150,9 +154,20 @@ public class Player : MonoBehaviour
             {
                 _rb.AddForce(Vector3.down * 1f , ForceMode.Impulse); 
             }
+
+
+           
         }
 
     }
+
+    private void ParentFollowPlayer()
+    {
+        _parentPlayer.transform.position = transform.position;  
+        //parent gameobject follows the current palyerchild
+    }
+
+
     private void LateUpdate()
     {
        Vector3 DesiredPositin = transform.position + _offset; //desired camera position
@@ -207,4 +222,10 @@ public class Player : MonoBehaviour
     {
         _newMoveSpeed += amount * Time.deltaTime;
     }
+
+    private void FixedUpdate()
+    {
+        ParentFollowPlayer();
+    }
+
 }
