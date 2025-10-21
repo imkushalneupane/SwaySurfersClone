@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -15,8 +16,8 @@ public class Player : MonoBehaviour
     [SerializeField]
     private Rigidbody _rb; //refrence to rigidbody
     [SerializeField]
-    private RawImage _gameOver;
-   
+    private GameObject _gameOver;
+
 
     [Space]
 
@@ -64,7 +65,6 @@ public class Player : MonoBehaviour
         _spawnPosition = transform.position;
         transform.position = _spawnPosition;
         isAlive = true;
-        _gameOver.enabled = false;
         _newMoveSpeed = _moveSpeed;
     }
    
@@ -203,7 +203,7 @@ public class Player : MonoBehaviour
     private void Die()
     {
         isAlive = false;
-        _gameOver.enabled = true;
+       
         Debug.Log("I'm Dead!!");
         _rb.linearVelocity = new Vector3(0,0,0);
 
@@ -212,12 +212,19 @@ public class Player : MonoBehaviour
         _boxCollider.size = new Vector3(_originalSize.x, _originalSize.y * .3f, _originalSize.z);
 
         _backgroundMusic.Stop();
-        _gameOverSound.Play();
+        
 
-
+        
+        StartCoroutine(OnGameOver());
     }
-    
-  
+
+    private  IEnumerator OnGameOver()
+    {
+        yield return new WaitForSeconds(1f);
+        _gameOver.SetActive(true);
+        _gameOverSound.Play();
+    }
+
     public void IncreaseSpeed(float amount)
     {
         _newMoveSpeed += amount * Time.deltaTime;
