@@ -11,30 +11,11 @@ public class SkyBoxChanger : MonoBehaviour
         {
             RenderSettings.skybox = skyboxes[index];
             DynamicGI.UpdateEnvironment(); // refresh lighting/reflections
+            Debug.Log("SkyChanged");
+
+            PlayerPrefs.SetInt("SelectedSkybox", index); // remember choice
+            PlayerPrefs.Save();
         }
     }
-
-    private void Update()
-    {
-        if (skyboxes != null)
-        {
-            if(Input.GetKey(KeyCode.Alpha0))
-            {
-                SetSkybox(0);
-            }
-            if (Input.GetKey(KeyCode.Alpha1))
-            {
-                SetSkybox(1);
-            }
-            if (Input.GetKey(KeyCode.Alpha2))
-            {
-                SetSkybox(2);
-            }
-            if (Input.GetKey(KeyCode.Alpha3))
-            {
-                SetSkybox(3);
-            }
-
-        }
-    }
+   
 }
