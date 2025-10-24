@@ -8,6 +8,7 @@ TagManager:
   - obstacle
   - CinemachineTarget
   - Coin
+  - SkyBox
   layers:
   - Default
   - TransparentFX

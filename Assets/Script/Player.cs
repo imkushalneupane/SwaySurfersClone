@@ -43,6 +43,7 @@ public class Player : MonoBehaviour
     
     private bool onGround = true; 
     private bool isAlive = false;
+    private bool isSliding = false;
 
     [SerializeField]
     private AudioSource _backgroundMusic;
@@ -104,33 +105,33 @@ public class Player : MonoBehaviour
                 _animator.SetBool("isLeft",false);
             }
 
-            if ((Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow)) && onGround)
+            /* if ((Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow)) && onGround)
             {
                 _rb.AddForce(Vector3.down, ForceMode.Impulse);
-                //_animator.SetBool("isSliding", true); // for sliding animation
+                
 
                 //srinking the box collider
                 _boxCollider.size = new Vector3(_originalSize.x, _originalSize.y * .3f, _originalSize.z);
-                //_boxCollider.center = new Vector3(_originalCenter.x,_originalCenter.y - .5f , _originalCenter.z);
+               
             }
-            else if ((Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow)))
+             else */ if ((Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow)))
             {
-                //_rb.AddForce(Vector3.down, ForceMode.Impulse);
-                _animator.SetBool("isSliding", true); // for sliding animation
-
-                //srinking the box collider
-                _boxCollider.size = new Vector3(_originalSize.x, _originalSize.y * .3f, _originalSize.z);
-                //_boxCollider.center = new Vector3(_originalCenter.x,_originalCenter.y - .5f , _originalCenter.z);
+                if (!isSliding)
+                {
+                    StartCoroutine(OnPlayerSlide());
+                }
             }
-            else
+            
+           /*else
             {
                 _animator.SetBool("isSliding", false); // for going back to running animation
 
                 // for resetting the collider dimensions
                 _boxCollider.size = _originalSize;
-                //_boxCollider.center = _originalCenter;
+                
 
             }
+           */
 
 
             if ((Input.GetKey(KeyCode.Space)||Input.GetKey(KeyCode.UpArrow)) && onGround)
@@ -158,6 +159,29 @@ public class Player : MonoBehaviour
 
            
         }
+
+    }
+
+
+    IEnumerator OnPlayerSlide()
+    {
+        isSliding = true;
+
+        _animator.SetBool("isSliding", true); // for sliding animation
+
+        //srinking the box collider
+        _boxCollider.size = new Vector3(_originalSize.x, _originalSize.y * .3f, _originalSize.z);
+
+        yield return new WaitForSeconds(1.0f);
+
+        // for resetting the collider dimensions
+        _boxCollider.size = _originalSize;
+
+        yield return new WaitForSeconds(0.15f);
+
+        _animator.SetBool("isSliding", false); // for going back to running animation
+
+        isSliding = false;
 
     }
 

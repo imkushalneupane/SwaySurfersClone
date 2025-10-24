@@ -7,7 +7,7 @@ public class CharacterPreviewScript : MonoBehaviour
     [SerializeField]
     private GameObject[] _characters; //array of Playable Characters
 
-    private int _currentIndex = 1;
+    private int _currentIndex;
 
     [SerializeField]
     private GameObject _leftArrow;
@@ -16,8 +16,12 @@ public class CharacterPreviewScript : MonoBehaviour
 
     private void Start()
     {
-        Time.timeScale =  1;
+        Time.timeScale =  1;  //resuming the timescale for preview animations
+
+        _currentIndex = PlayerPrefs.GetInt("SelectedCharacter",1);   //checking character from previeviously saved 
         ShowCharacter(_currentIndex);
+        LeftCheck();  //to prevent arrow on left most character preview
+        RightCheck();  // to prevent arrow on rightmost character preview
     }
 
     private void ShowCharacter(int index)
@@ -49,6 +53,14 @@ public class CharacterPreviewScript : MonoBehaviour
         RightCheck();
         _leftArrow.SetActive(true);
     }
+
+    public void OnSelectPressed()   //Saving the preferences of the Player
+    {
+        PlayerPrefs.SetInt("SelectedCharacter",_currentIndex);
+        PlayerPrefs.Save();   
+    }
+
+
     private void LeftCheck()
     {
         if (_currentIndex <= 0)
