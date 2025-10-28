@@ -1,3 +1,5 @@
+using System;
+using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -14,8 +16,8 @@ public class Player : MonoBehaviour
     [SerializeField]
     private Rigidbody _rb; //refrence to rigidbody
     [SerializeField]
-    private RawImage _gameOver;
-   
+    private GameObject _gameOver;
+
 
     [Space]
 
@@ -41,6 +43,15 @@ public class Player : MonoBehaviour
     
     private bool onGround = true; 
     private bool isAlive = false;
+    private bool isSliding = false;
+
+    [SerializeField]
+    private AudioSource _backgroundMusic;
+    [SerializeField]
+    private AudioSource _gameOverSound;
+
+    [SerializeField]
+    Transform _parentPlayer;
 
     void Start()
     {
@@ -55,7 +66,6 @@ public class Player : MonoBehaviour
         _spawnPosition = transform.position;
         transform.position = _spawnPosition;
         isAlive = true;
-        _gameOver.enabled = false;
         _newMoveSpeed = _moveSpeed;
     }
    
@@ -95,33 +105,33 @@ public class Player : MonoBehaviour
                 _animator.SetBool("isLeft",false);
             }
 
-            if ((Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow)) && onGround)
+            /* if ((Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow)) && onGround)
             {
                 _rb.AddForce(Vector3.down, ForceMode.Impulse);
-                //_animator.SetBool("isSliding", true); // for sliding animation
+                
 
                 //srinking the box collider
                 _boxCollider.size = new Vector3(_originalSize.x, _originalSize.y * .3f, _originalSize.z);
-                //_boxCollider.center = new Vector3(_originalCenter.x,_originalCenter.y - .5f , _originalCenter.z);
+               
             }
-            else if ((Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow)))
+             else */ if ((Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow)))
             {
-                //_rb.AddForce(Vector3.down, ForceMode.Impulse);
-                _animator.SetBool("isSliding", true); // for sliding animation
-
-                //srinking the box collider
-                _boxCollider.size = new Vector3(_originalSize.x, _originalSize.y * .3f, _originalSize.z);
-                //_boxCollider.center = new Vector3(_originalCenter.x,_originalCenter.y - .5f , _originalCenter.z);
+                if (!isSliding)
+                {
+                    StartCoroutine(OnPlayerSlide());
+                }
             }
-            else
+            
+           /*else
             {
                 _animator.SetBool("isSliding", false); // for going back to running animation
 
                 // for resetting the collider dimensions
                 _boxCollider.size = _originalSize;
-                //_boxCollider.center = _originalCenter;
+                
 
             }
+           */
 
 
             if ((Input.GetKey(KeyCode.Space)||Input.GetKey(KeyCode.UpArrow)) && onGround)
@@ -145,9 +155,43 @@ public class Player : MonoBehaviour
             {
                 _rb.AddForce(Vector3.down * 1f , ForceMode.Impulse); 
             }
+
+
+           
         }
 
     }
+
+
+    IEnumerator OnPlayerSlide()
+    {
+        isSliding = true;
+
+        _animator.SetBool("isSliding", true); // for sliding animation
+
+        //srinking the box collider
+        _boxCollider.size = new Vector3(_originalSize.x, _originalSize.y * .3f, _originalSize.z);
+
+        yield return new WaitForSeconds(1.0f);
+
+        // for resetting the collider dimensions
+        _boxCollider.size = _originalSize;
+
+        yield return new WaitForSeconds(0.15f);
+
+        _animator.SetBool("isSliding", false); // for going back to running animation
+
+        isSliding = false;
+
+    }
+
+    private void ParentFollowPlayer()
+    {
+        _parentPlayer.transform.position = transform.position;  
+        //parent gameobject follows the current palyerchild
+    }
+
+
     private void LateUpdate()
     {
        Vector3 DesiredPositin = transform.position + _offset; //desired camera position
@@ -183,19 +227,36 @@ public class Player : MonoBehaviour
     private void Die()
     {
         isAlive = false;
-        _gameOver.enabled = true;
-        Debug.Log("I'm Dead My nigga!");
+       
+        Debug.Log("I'm Dead!!");
         _rb.linearVelocity = new Vector3(0,0,0);
 
         //for die animation and setting to ground
         _animator.SetBool("isDead",true);
         _boxCollider.size = new Vector3(_originalSize.x, _originalSize.y * .3f, _originalSize.z);
-      
+
+        _backgroundMusic.Stop();
+        
+
+        
+        StartCoroutine(OnGameOver());
     }
-    
-  
+
+    private  IEnumerator OnGameOver()
+    {
+        yield return new WaitForSeconds(1f);
+        _gameOver.SetActive(true);
+        _gameOverSound.Play();
+    }
+
     public void IncreaseSpeed(float amount)
     {
         _newMoveSpeed += amount * Time.deltaTime;
     }
+
+    private void FixedUpdate()
+    {
+        ParentFollowPlayer();
+    }
+
 }
